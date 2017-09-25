@@ -1,6 +1,7 @@
 ---
 input_file: temp.log
 output_file: result.log
-start_date: /19\/Sep\/2017/
-end_date: /19\/Sep\/2017/
-overtime: 5
+start_date: /20\/Sep\/2017/
+end_date: /20\/Sep\/2017/
+overtime: 20
+log_format: '$remote_addr|$remote_port|$request_time|$remote_user|$time_local|$request|$status|$body_bytes_sent|$http_referer|$http_user_agent'

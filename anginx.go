@@ -49,20 +49,26 @@ func ReadLine(filePth string,result_path string,ranged_key []string) error {
 
 		//空行判断
 		if len(line) != 0 {
-			var m = map[string]string{}
+
 			// byte转string
 			str := string(line[:])
 			// string split  类似于awk
-			a := strings.Split(str, "|")
-			index := 0
-			//值匹配 遍历map时key是随机化的 不能直接遍历
-			for _,key := range ranged_key {
-				m[key] = a[index]
-				index++
-			}
-			//fmt.Println(m)
-			// string转float
-			cost, _ := strconv.ParseFloat(m["request_time"], 3)
+			a := strings.Split(str, " ")
+
+			cost, _ := strconv.ParseFloat(a[2], 3)
+
+			//var m = map[string]string{}
+			//index := 0
+			////值匹配 遍历map时key是随机化的 不能直接遍历
+			//for _,key := range ranged_key {
+			//	m[key] = a[index]
+			//	index++
+			//}
+			////fmt.Println(m)
+			//// string转float
+			//cost, _ := strconv.ParseFloat(m["request_time"], 3)
+
+
 			if cost > t.Overtime {
 				result_f.Write(line)
 			}
@@ -81,10 +87,15 @@ func ReadLine(filePth string,result_path string,ranged_key []string) error {
 
 func FilterTime(start string,end string, file_path string) {
 	//build cmd
-	command := "sed -n '" + start + "," + end + "p' " + file_path + " > tmp"
+	var command string
+	if len(end) != 0 {
+		command = "sed -n '" + start + "," + end + "p' " + file_path + " > tmp"
+	} else {
+		command = "sed -n '" + start + "p' " + file_path + " > tmp"
+	}
 	// 使用bash才能够使用重定向 >
 	c := exec.Command("bash","-c",command)
-	//fmt.Println(c.Args)
+	fmt.Println(c.Args)
 	// debug cmd
 	var stderr bytes.Buffer
 	c.Stderr = &stderr

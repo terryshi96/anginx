@@ -53,7 +53,7 @@ func ReadLine(filePth string,result_path string,ranged_key []string) error {
 			// byte转string
 			str := string(line[:])
 			// string split  类似于awk
-			a := strings.Split(str, " ")
+			a := strings.Split(str, "|")
 
 			//cost, _ := strconv.ParseFloat(a[2], 3)
 

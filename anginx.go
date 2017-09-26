@@ -55,18 +55,18 @@ func ReadLine(filePth string,result_path string,ranged_key []string) error {
 			// string split  类似于awk
 			a := strings.Split(str, " ")
 
-			//cost, _ := strconv.ParseFloat(a[2], 3)
+			cost, _ := strconv.ParseFloat(a[2], 3)
 
-			var m = map[string]string{}
-			index := 0
-			//值匹配 遍历map时key是随机化的 不能直接遍历
-			for _,key := range ranged_key {
-				m[key] = a[index]
-				index++
-			}
-			//fmt.Println(m)
-			// string转float
-			cost, _ := strconv.ParseFloat(m["request_time"], 3)
+			//var m = map[string]string{}
+			//index := 0
+			////值匹配 遍历map时key是随机化的 不能直接遍历
+			//for _,key := range ranged_key {
+			//	m[key] = a[index]
+			//	index++
+			//}
+			////fmt.Println(m)
+			//// string转float
+			//cost, _ := strconv.ParseFloat(m["request_time"], 3)
 
 
 			if cost > t.Overtime {

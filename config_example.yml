@@ -1,10 +1,10 @@
 ---
 input_file: temp.log
 output_file: result.log
-start_date: /22\/Sep\/2017/
-end_date: /24\/Sep\/2017/
+start_date: /25\/Sep\/2017/
+#end_date: /24\/Sep\/2017/
 ##an exact day
-#end_date:
+end_date:
 ##read until the end of the file
 #end_date: $
 overtime: 5

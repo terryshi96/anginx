@@ -118,6 +118,13 @@ func ParseFormat(format string) []string {
 	return ranged_key
 }
 
+
+//todo
+func ClearTmpFile()  {
+
+}
+
+
 func main()  {
 	config_path := flag.String("c","","please offer config")
 	// 解析命令行参数

@@ -15,6 +15,7 @@
 
 temp.*
 *.log
+tmp
 
 sqlite.db
 

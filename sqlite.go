@@ -3,14 +3,16 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	"os"
+	_ "os"
 	"log"
 	"fmt"
 )
 
+
+
 func InitDatabase() *sql.DB {
 	//删除原数据 不对数据做持久化
-	os.Remove("./sqlite.db")
+	//os.Remove("./sqlite.db")
 	//新建数据文件
 	db,err := sql.Open("sqlite3","./sqlite.db")
 	if err != nil {

@@ -113,13 +113,13 @@ func main()  {
 	//按日期过滤
 	FilterTime(t.Start_date,t.End_date,t.Input_file)
 	//读取日志格式
-	ranged_key := ParseFormat(t.Log_format)
+	//ranged_key := ParseFormat(t.Log_format)
 
 	//初始化数据库
 	db := InitDatabase()
 	//建表
-	CreateTable(db,ranged_key)
+	//CreateTable(db,ranged_key)
 	//读入数据
-	ReadLine("tmp",db,ranged_key)
+	//ReadLine("tmp",db,ranged_key)
 	defer db.Close()
 }

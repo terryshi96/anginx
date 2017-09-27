@@ -3,10 +3,8 @@ package main
 import (
 	"os"
 	"bufio"
-	//"io"
 	"flag"
 	"strings"
-	//"strconv"
 	"fmt"
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
@@ -27,11 +25,6 @@ type Conf struct {
 
 var t Conf
 
-//hookfunc 对line进行处理
-//func processLine(line []byte) {
-//	//os.Stdout.Write(line)
-//}
-//func ReadLine(filePth string, hookfn func([]byte)) error {
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	f, err := os.Open(filePth)
 	if err != nil {
@@ -39,47 +32,16 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	}
 	defer f.Close()
 	bfRd := bufio.NewReader(f)
-
-	////打开文件模式 文件不存在则创建 已有文件则清空 末尾添加 只写
-	//result_f, err := os.OpenFile(result_path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY|os.O_APPEND, 0666)
-
 	for {
 		//按行读取文件
 		line, _ := bfRd.ReadBytes('\n')
-		//hookfn(line) //放在错误处理前面，即使发生错误，也会处理已经读取到的数据。
-
 		//空行判断
 		if len(line) != 0 {
-
 			// byte转string
 			str := string(line[:])
 			// string split  类似于awk
 			a := strings.Split(str, "|")
 			InsertData(db,ranged_key,a)
-			// -----------------------------------------------------
-			// 不再需要这部分
-			//var m = map[string]string{}
-			//index := 0
-			////值匹配 遍历map时key是随机化的 不能直接遍历
-			//for _,key := range ranged_key {
-			//	m[key] = a[index]
-			//	index++
-			//}
-			////fmt.Println(m)
-			//// string转float
-			//cost, _ := strconv.ParseFloat(m["request_time"], 3)
-			//if cost > t.Overtime {
-			//	result_f.Write(line)
-			//}
-			//if err != nil { //遇到任何错误立即返回，并忽略 EOF 错误信息
-			//	if err == io.EOF {
-			//		return nil
-			//	}
-			//	return err
-			//}
-			// ------------------------------------------------------
-
-
 
 		} else {
 			return nil

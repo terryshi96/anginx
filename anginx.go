@@ -15,15 +15,16 @@ import (
 
 // 配置文件结构体
 type Conf struct {
-	Input_file string
-	Output_file string
-	Start_date string
-	End_date string
-	Overtime float64
-	Log_format string
+	Input_file string      // 需要分析的日志文件路径
+	Output_file string     // 输出的文件路径
+	Start_date string      // 开始日期
+	End_date string        // 结束日期
+	Overtime float64       // 超时时间
+	Log_format string      // 日志格式
 }
 
 var t Conf
+var tmp_path string = "/tmp/tmp.log"
 
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	f, err := os.Open(filePth)
@@ -32,6 +33,16 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	}
 	defer f.Close()
 	bfRd := bufio.NewReader(f)
+	var request_index int
+	var time_index int
+	for i,v := range ranged_key {
+		switch v {
+		case "request":
+			request_index = i
+		case "request_time":
+			time_index = i
+		}
+	}
 	for {
 		//按行读取文件
 		line, _ := bfRd.ReadBytes('\n')
@@ -41,6 +52,10 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			str := string(line[:])
 			// string split  类似于awk
 			a := strings.Split(str, "|")
+			//将请求参数去除
+			if strings.Contains(a[request_index],"?") {
+				a[request_index] = strings.Split(a[request_index], "?")[0]
+			}
 			InsertData(db,ranged_key,a)
 
 		} else {
@@ -54,13 +69,13 @@ func FilterTime(start string,end string, file_path string) {
 	//build cmd
 	var command string
 	if len(end) != 0 {
-		command = "sed -n '" + start + "," + end + "p' " + file_path + " > tmp"
+		command = "sed -n '" + start + "," + end + "p' " + file_path + " > " + tmp_path
 	} else {
-		command = "sed -n '" + start + "p' " + file_path + " > tmp"
+		command = "sed -n '" + start + "p' " + file_path + " > " + tmp_path
 	}
 	// 使用bash才能够使用重定向 >
 	c := exec.Command("bash","-c",command)
-	fmt.Println(c.Args)
+	//fmt.Println(c.Args)
 	// debug cmd
 	var stderr bytes.Buffer
 	c.Stderr = &stderr
@@ -112,14 +127,24 @@ func main()  {
 	fmt.Println("解析文件：",t.Input_file,"输出文件",t.Output_file)
 	//按日期过滤
 	FilterTime(t.Start_date,t.End_date,t.Input_file)
-	//读取日志格式
-	//ranged_key := ParseFormat(t.Log_format)
 
 	//初始化数据库
 	db := InitDatabase()
-	//建表
+	////读取日志格式
+	//ranged_key := ParseFormat(t.Log_format)
+	////建表
 	//CreateTable(db,ranged_key)
-	//读入数据
-	//ReadLine("tmp",db,ranged_key)
+	////读入数据
+	//ReadLine(tmp_path,db,ranged_key)
+	//断开数据库连接
 	defer db.Close()
+
+	//统计独立ip数
+	CountUniqueIP(db)
+	//统计请求数
+	CountRequest(db)
+	//统计访问量前200的请求
+	ListPopularURL(db)
+
+
 }

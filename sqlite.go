@@ -3,18 +3,23 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
-	_ "os"
 	"log"
-	"fmt"
+	//"fmt"
+	//"os"
 )
 
-
+type Analysis struct {
+	RequestCount string       //请求总数
+	UniqueIPCount string      //独立IP数
+	//PopularURL string
+}
 
 func InitDatabase() *sql.DB {
 	//删除原数据 不对数据做持久化
-	//os.Remove("./sqlite.db")
+	db_path := "/tmp/sqlite.db"
+	//os.Remove(db_path)
 	//新建数据文件
-	db,err := sql.Open("sqlite3","./sqlite.db")
+	db,err := sql.Open("sqlite3",db_path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +38,7 @@ func CreateTable(db *sql.DB,ranged_key []string)  {
 		}
 	}
 	sqlstmt = sqlstmt + ");"
-	fmt.Println(sqlstmt)
+	//fmt.Println(sqlstmt)
 	_, err := db.Exec(sqlstmt)
 	if err != nil {
 		log.Printf("%q: %s\n", err, sqlstmt)
@@ -41,25 +46,9 @@ func CreateTable(db *sql.DB,ranged_key []string)  {
 }
 
 func InsertData(db *sql.DB, column []string, value []string)  {
-	// 事务的写法
-	//tx, err := db.Begin()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//defer stmt.Close()
-	//for i := 0; i < 100; i++ {
-	//	_, err = stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}
-	//tx.Commit()
 	insert_column := ""
 	insert_value := ""
+	// 构造插入语句
 	for i,key := range column {
 		if i != len(column) - 1 {
 			insert_column = insert_column + key + ","
@@ -69,7 +58,6 @@ func InsertData(db *sql.DB, column []string, value []string)  {
 			insert_value = insert_value + "?"
 		}
 	}
-	fmt.Println(insert_column,insert_value)
 	stmt, err := db.Prepare("insert into log(" + insert_column + ") values(" + insert_value + ")")
 	if err != nil {
 		log.Fatal(err)
@@ -85,40 +73,49 @@ func InsertData(db *sql.DB, column []string, value []string)  {
 	}
 }
 
-//func QueryData(db *sql.DB)  {
-//	rows, err := db.Query("select id, name from foo")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	defer rows.Close()
-//	for rows.Next() {
-//		var id int
-//		var name string
-//		err = rows.Scan(&id, &name)
-//		if err != nil {
-//			log.Fatal(err)
-//		}
-//		fmt.Println(id, name)
-//	}
-//	err = rows.Err()
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	stmt, err = db.Prepare("select name from foo where id = ?")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	defer stmt.Close()
-//	var name string
-//	err = stmt.QueryRow("3").Scan(&name)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	fmt.Println(name)
-//}
-//
+func CountUniqueIP(db *sql.DB) string {
+	res, err := db.Query("SELECT COUNT(DISTINCT remote_addr) AS count FROM log")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Close()
+	var count string
+	for res.Next() {
+		res.Scan(&count)
+	}
+	//fmt.Println(count)
+	return count
+}
 
+func CountRequest(db *sql.DB) string {
+	res, err := db.Query("SELECT COUNT(*) AS count FROM log")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Close()
+	var count string
+	for res.Next() {
+		res.Scan(&count)
+	}
+	//fmt.Println(count)
+	return count
+}
+
+func ListPopularURL(db *sql.DB) [200][2]string {
+	res, err := db.Query("SELECT request,count(*) AS count FROM log GROUP BY request ORDER BY count DESC LIMIT 200")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Close()
+	var rows [200][2]string
+	index := 0
+	for res.Next() {
+		res.Scan(&rows[index][0],&rows[index][1])
+		index++
+	}
+	return rows
+
+}
 
 
 

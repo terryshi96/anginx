@@ -105,7 +105,7 @@ func ListPopularURL(db *sql.DB) [][2]string {
 	var rows [][2]string
 	for res.Next() {
 		var a [2]string
-		res.Scan(a[0],a[1])
+		res.Scan(&a[0],&a[1])
 		rows = append(rows,a)
 	}
 	return rows
@@ -118,7 +118,7 @@ func ListPopularIP(db *sql.DB) [][2]string {
 	var rows [][2]string
 	for res.Next() {
 		var a [2]string
-		res.Scan(a[0],a[1])
+		res.Scan(&a[0],&a[1])
 		rows = append(rows,a)
 	}
 	return rows
@@ -132,7 +132,7 @@ func ListOverTime(db *sql.DB) [][2]string {
 	var rows [][2]string
 	for res.Next() {
 		var a [2]string
-		res.Scan(a[0],a[1])
+		res.Scan(&a[0],&a[1])
 		rows = append(rows,a)
 	}
 	return rows

@@ -16,7 +16,7 @@
 temp.*
 *.log
 tmp
-
+Anginx.html
 sqlite.db
 
 .idea

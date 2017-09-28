@@ -98,44 +98,42 @@ func CountRequest(db *sql.DB) string {
 	return count
 }
 
-func ListPopularURL(db *sql.DB) [200][2]string {
+func ListPopularURL(db *sql.DB) [][2]string {
 	res, err := db.Query("SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT 200")
 	Check(err)
 	defer res.Close()
-	var rows [200][2]string
-	index := 0
+	var rows [][2]string
 	for res.Next() {
-		res.Scan(&rows[index][0],&rows[index][1])
-		index++
+		var a [2]string
+		res.Scan(a[0],a[1])
+		rows = append(rows,a)
 	}
 	return rows
 }
 
-func ListPopularIP(db *sql.DB) [50][2]string {
+func ListPopularIP(db *sql.DB) [][2]string {
 	res, err := db.Query("SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50")
 	Check(err)
 	defer res.Close()
-	var rows [50][2]string
-	index := 0
+	var rows [][2]string
 	for res.Next() {
-		res.Scan(&rows[index][0],&rows[index][1])
-		fmt.Println(rows[index][0])
-		index++
+		var a [2]string
+		res.Scan(a[0],a[1])
+		rows = append(rows,a)
 	}
 	return rows
 }
 
-func ListOverTime(db *sql.DB) [50][2]string {
+func ListOverTime(db *sql.DB) [][2]string {
 	sql := "SELECT * FROM (SELECT round(avg(request_time),3) AS cost,request FROM log  GROUP BY request ORDER BY cost DESC) WHERE cost > " + t.Overtime
 	res, err := db.Query(sql)
 	Check(err)
 	defer res.Close()
-	var rows [50][2]string
-	index := 0
+	var rows [][2]string
 	for res.Next() {
-		res.Scan(&rows[index][0],&rows[index][1])
-		fmt.Println(rows[index][0])
-		index++
+		var a [2]string
+		res.Scan(a[0],a[1])
+		rows = append(rows,a)
 	}
 	return rows
 }

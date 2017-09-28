@@ -84,7 +84,6 @@ func CountUniqueIP(db *sql.DB) string {
 	for res.Next() {
 		res.Scan(&count)
 	}
-	//fmt.Println(count)
 	return count
 }
 
@@ -96,12 +95,11 @@ func CountRequest(db *sql.DB) string {
 	for res.Next() {
 		res.Scan(&count)
 	}
-	//fmt.Println(count)
 	return count
 }
 
 func ListPopularURL(db *sql.DB) [200][2]string {
-	res, err := db.Query("SELECT request,count(*) AS count FROM log GROUP BY request ORDER BY count DESC LIMIT 200")
+	res, err := db.Query("SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT 200")
 	Check(err)
 	defer res.Close()
 	var rows [200][2]string
@@ -111,21 +109,35 @@ func ListPopularURL(db *sql.DB) [200][2]string {
 		index++
 	}
 	return rows
-
 }
 
 func ListPopularIP(db *sql.DB) [50][2]string {
-	res, err := db.Query("SELECT remote_addr,count(*) AS count FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50")
+	res, err := db.Query("SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50")
 	Check(err)
 	defer res.Close()
 	var rows [50][2]string
 	index := 0
 	for res.Next() {
 		res.Scan(&rows[index][0],&rows[index][1])
+		fmt.Println(rows[index][0])
 		index++
 	}
 	return rows
+}
 
+func ListOverTime(db *sql.DB) [50][2]string {
+	sql := "SELECT * FROM (SELECT round(avg(request_time),3) AS cost,request FROM log  GROUP BY request ORDER BY cost DESC) WHERE cost > " + t.Overtime
+	res, err := db.Query(sql)
+	Check(err)
+	defer res.Close()
+	var rows [50][2]string
+	index := 0
+	for res.Next() {
+		res.Scan(&rows[index][0],&rows[index][1])
+		fmt.Println(rows[index][0])
+		index++
+	}
+	return rows
 }
 
 

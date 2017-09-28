@@ -15,7 +15,7 @@ type Conf struct {
 	Input_file string      // 需要分析的日志文件路径
 	Start_date string      // 开始日期
 	End_date string        // 结束日期
-	Overtime float64       // 超时时间
+	Overtime string       // 超时时间
 	Log_format string      // 日志格式
 }
 

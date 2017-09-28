@@ -9,8 +9,8 @@ import (
 type Data struct{
 	UniqueIPNumber string
 	RequestNumber string
-	PopularURL [200][2]string
-	PopularIP  [50][2]string
+	PopularURL [][2]string
+	PopularIP  [][2]string
 }
 
 

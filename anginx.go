@@ -11,12 +11,12 @@ import (
 	"os/exec"
 	"bytes"
 	"database/sql"
+	"log"
 )
 
 // 配置文件结构体
 type Conf struct {
 	Input_file string      // 需要分析的日志文件路径
-	Output_file string     // 输出的文件路径
 	Start_date string      // 开始日期
 	End_date string        // 结束日期
 	Overtime float64       // 超时时间
@@ -25,6 +25,7 @@ type Conf struct {
 
 var t Conf
 var tmp_path string = "/tmp/tmp.log"
+var result_path string = "Anginx.html"
 
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	f, err := os.Open(filePth)
@@ -34,13 +35,9 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	defer f.Close()
 	bfRd := bufio.NewReader(f)
 	var request_index int
-	var time_index int
 	for i,v := range ranged_key {
-		switch v {
-		case "request":
+		if v == "request" {
 			request_index = i
-		case "request_time":
-			time_index = i
 		}
 	}
 	for {
@@ -114,6 +111,12 @@ func CheckConfig()  {
 
 }
 
+func Check(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main()  {
 	config_path := flag.String("c","","please offer config")
 	// 解析命令行参数
@@ -124,27 +127,27 @@ func main()  {
 	t = Conf{}
 	// 解析yaml文件
 	yaml.Unmarshal(config, &t)
-	fmt.Println("解析文件：",t.Input_file,"输出文件",t.Output_file)
+	fmt.Println("解析文件：",t.Input_file,"输出文件",result_path)
 	//按日期过滤
 	FilterTime(t.Start_date,t.End_date,t.Input_file)
 
-	//初始化数据库
-	db := InitDatabase()
+	////初始化数据库
+	//db := InitDatabase()
 	////读取日志格式
 	//ranged_key := ParseFormat(t.Log_format)
 	////建表
 	//CreateTable(db,ranged_key)
 	////读入数据
 	//ReadLine(tmp_path,db,ranged_key)
-	//断开数据库连接
-	defer db.Close()
+	////断开数据库连接
+	//defer db.Close()
+	//
+	////统计独立ip数
+	//CountUniqueIP(db)
+	////统计请求数
+	//CountRequest(db)
+	////统计访问量前200的请求
+	//ListPopularURL(db)
 
-	//统计独立ip数
-	CountUniqueIP(db)
-	//统计请求数
-	CountRequest(db)
-	//统计访问量前200的请求
-	ListPopularURL(db)
-
-
+	InitTemplate()
 }

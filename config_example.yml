@@ -1,6 +1,5 @@
 ---
 input_file: temp.log
-output_file: result.log
 start_date: /27\/Sep\/2017/
 #end_date: /24\/Sep\/2017/
 ##an exact day

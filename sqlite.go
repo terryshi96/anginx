@@ -138,6 +138,20 @@ func ListOverTime(db *sql.DB) [][2]string {
 	return rows
 }
 
+//func ListError(db *sql.DB) ([][2]string,string) {
+//	sql := "SELECT * FROM (SELECT status,request FROM log GROUP BY status,request) WHERE status LIKE '4%' OR status LIKE '5%'"
+//	res, err := db.Query(sql)
+//	Check(err)
+//	defer res.Close()
+//	var rows [][2]string
+//	for res.Next() {
+//		var a [2]string
+//		res.Scan(&a[0],&a[1])
+//		rows = append(rows,a)
+//	}
+//	return rows
+//}
+
 
 
 

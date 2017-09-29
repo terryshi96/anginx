@@ -54,6 +54,8 @@ func main()  {
 	data.PopularURL = ListPopularURL(db)
 	//统计访问量前50的IP
 	data.PopularIP = ListPopularIP(db)
+	//统计超时请求
+	data.OvertimeReq = ListOverTime(db)
 	//生成html
 	GenerateHtml()
 }

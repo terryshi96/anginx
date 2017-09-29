@@ -5,23 +5,23 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"fmt"
-	"os"
+	"strconv"
 )
 
 
 func InitDatabase() *sql.DB {
-	//删除原数据 不对数据做持久化
+	// 删除原数据 不对数据做持久化
 	db_path := "/tmp/sqlite.db"
-	os.Remove(db_path)
-	//新建数据文件
+	//os.Remove(db_path)
+	// 新建数据文件
 	db,err := sql.Open("sqlite3",db_path)
 	Check(err)
 	return db
 }
 
 func CreateTable(db *sql.DB,ranged_key []string)  {
-	//根据解析的日志格式创建log表
-	//构造创建sql
+	// 根据解析的日志格式创建log表
+	// 构造创建sql
 	sqlstmt := "create table log ("
 	for i,key := range ranged_key {
 		if i == len(ranged_key) - 1 {
@@ -67,7 +67,7 @@ func InsertData(db *sql.DB, column []string, value []string)  {
 	}
 	stmt, err := db.Prepare("insert into log(" + insert_column + ") values(" + insert_value + ")")
 	Check(err)
-	//不定参数 类型转化
+	// 不定参数 类型转化
 	arg := make([]interface{},len(value))
 	for i,v := range value {
 		arg[i] = v
@@ -76,56 +76,8 @@ func InsertData(db *sql.DB, column []string, value []string)  {
 	Check(err)
 }
 
-func CountUniqueIP(db *sql.DB) string {
-	res, err := db.Query("SELECT COUNT(DISTINCT remote_addr) AS count FROM log")
-	Check(err)
-	defer res.Close()
-	var count string
-	for res.Next() {
-		res.Scan(&count)
-	}
-	return count
-}
-
-func CountRequest(db *sql.DB) string {
-	res, err := db.Query("SELECT COUNT(*) AS count FROM log")
-	Check(err)
-	defer res.Close()
-	var count string
-	for res.Next() {
-		res.Scan(&count)
-	}
-	return count
-}
-
-func ListPopularURL(db *sql.DB) [][2]string {
-	res, err := db.Query("SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT 200")
-	Check(err)
-	defer res.Close()
-	var rows [][2]string
-	for res.Next() {
-		var a [2]string
-		res.Scan(&a[0],&a[1])
-		rows = append(rows,a)
-	}
-	return rows
-}
-
-func ListPopularIP(db *sql.DB) [][2]string {
-	res, err := db.Query("SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50")
-	Check(err)
-	defer res.Close()
-	var rows [][2]string
-	for res.Next() {
-		var a [2]string
-		res.Scan(&a[0],&a[1])
-		rows = append(rows,a)
-	}
-	return rows
-}
-
-func ListOverTime(db *sql.DB) [][2]string {
-	sql := "SELECT * FROM (SELECT round(avg(request_time),3) AS cost,request FROM log  GROUP BY request ORDER BY cost DESC) WHERE cost > " + t.Overtime
+// 渲染长度为2的数组
+func RenderTwoColumn(db *sql.DB,sql string) [][2]string {
 	res, err := db.Query(sql)
 	Check(err)
 	defer res.Close()
@@ -137,21 +89,71 @@ func ListOverTime(db *sql.DB) [][2]string {
 	}
 	return rows
 }
+// 渲染结果字符串
+func RenderString(db *sql.DB,sql string) string {
+	res, err := db.Query(sql)
+	Check(err)
+	defer res.Close()
+	var result string
+	for res.Next() {
+		res.Scan(&result)
+	}
+	return result
+}
 
-//func ListError(db *sql.DB) ([][2]string,string) {
-//	sql := "SELECT * FROM (SELECT status,request FROM log GROUP BY status,request) WHERE status LIKE '4%' OR status LIKE '5%'"
-//	res, err := db.Query(sql)
-//	Check(err)
-//	defer res.Close()
-//	var rows [][2]string
-//	for res.Next() {
-//		var a [2]string
-//		res.Scan(&a[0],&a[1])
-//		rows = append(rows,a)
-//	}
-//	return rows
-//}
+// 统计独立ip数
+func CountUniqueIP(db *sql.DB) string {
+	sql := "SELECT COUNT(DISTINCT remote_addr) AS count FROM log"
+	count := RenderString(db,sql)
+	return count
+}
 
+// 统计请求数
+func CountRequest(db *sql.DB) string {
+	sql := "SELECT COUNT(*) AS count FROM log"
+	count := RenderString(db,sql)
+	return count
+}
+
+// 统计访问量前200的请求
+func ListPopularURL(db *sql.DB) [][2]string {
+	sql := "SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT 200"
+	rows := RenderTwoColumn(db,sql)
+	return rows
+}
+
+// 统计访问量前50的IP
+func ListPopularIP(db *sql.DB) [][2]string {
+	sql := "SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50"
+	rows := RenderTwoColumn(db,sql)
+	return rows
+}
+
+// 统计平均超时请求
+func ListAvg(db *sql.DB) [][2]string {
+	sql := "SELECT * FROM (SELECT round(avg(request_time),3) AS cost,request FROM log  GROUP BY request ORDER BY cost DESC) WHERE cost > " + t.Overtime
+	rows := RenderTwoColumn(db,sql)
+	return rows
+}
+
+// 统计最长超时请求
+func ListLongest(db *sql.DB) [][2]string {
+	sql := "SELECT * FROM (SELECT request_time,request FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
+    rows := RenderTwoColumn(db,sql)
+	return rows
+}
+
+// 统计异常请求
+func ListError(db *sql.DB) ([][2]string,float64) {
+	sql := "SELECT * FROM (SELECT status,request FROM log GROUP BY status,request) WHERE status LIKE '4%' OR status LIKE '5%'"
+	rows := RenderTwoColumn(db,sql)
+	sql = "SELECT count(*) AS count FROM log WHERE status LIKE '4%' OR status LIKE '5%'"
+	count,_:= strconv.ParseFloat(RenderString(db,sql),64)
+	total,_ := strconv.ParseFloat(CountRequest(db),64)
+	rate := count / total * 100
+	fmt.Println(rate)
+	return rows,rate
+}
 
 
 

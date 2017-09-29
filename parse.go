@@ -33,15 +33,15 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 		}
 	}
 	for {
-		//按行读取文件
+		// 按行读取文件
 		line, _ := bfRd.ReadBytes('\n')
-		//空行判断
+		// 空行判断
 		if len(line) != 0 {
 			// byte转string
 			str := string(line[:])
 			// string split  类似于awk
 			a := strings.Split(str, "|")
-			//将请求参数去除
+			// 将请求参数去除
 			if strings.Contains(a[request_index],"?") {
 				a[request_index] = strings.Split(a[request_index], "?")[0]
 			}
@@ -55,7 +55,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 }
 
 func FilterTime(start string,end string, file_path string) {
-	//build cmd
+	// build cmd
 	var command string
 	if len(end) != 0 {
 		command = "sed -n '" + start + "," + end + "p' " + file_path + " > " + tmp_path
@@ -76,11 +76,11 @@ func FilterTime(start string,end string, file_path string) {
 }
 
 func ParseFormat(format string) []string {
-	//创建map
+	// 创建map
 	str := strings.Split(format, "|")
 	ranged_key := make([]string,0)
 	for _,value := range str {
-		//删除prefix
+		// 删除prefix
 		a := strings.TrimPrefix(value,"$")
 		ranged_key = append(ranged_key,a)
 	}

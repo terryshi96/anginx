@@ -12,7 +12,9 @@ type Data struct{
 	PopularURL [][2]string
 	PopularIP  [][2]string
 	OvertimeReq [][2]string
+	LongestReq [][2]string
 	ErrorRate  float64
+	ErrorReq   [][2]string
 }
 
 
@@ -27,9 +29,33 @@ func GenerateHtml()  {
     </head>
     <body>
 		<div>
+			<p>Overtime Requests</p>
+			<ul>
+				<span>Avg Request Time</span><span>Request Detail</span>
+				{{ range $_,$value := .OvertimeReq }}
+						<li>
+							{{ range $value }}
+								<span>{{.}}</span>
+							{{ end }}
+						</li>
+				{{ end }}
+			</ul>
+			<ul>
+				<span>Longest Request Times	</span><span>Request Detail</span>
+				{{ range $_,$value := .LongestReq }}
+						<li>
+							{{ range $value }}
+								<span>{{.}}</span>
+							{{ end }}
+						</li>
+				{{ end }}
+			</ul>
+		</div>
+		<div>
 			<p>Unique IP Number : {{.UniqueIPNumber}}</p>
 			<p>Top 50 IP</p>
 			<ul>
+				<span>Request Times	</span><span>IP</span>
 				{{ range $_,$value := .PopularIP }}
 						<li>
 							{{ range $value }}
@@ -42,8 +68,9 @@ func GenerateHtml()  {
 
 		<div>
 			<p>Total Request Number : {{.RequestNumber}}<p>
-			<p>Top 200 Request</p>
+			<p>Top 200 Requests</p>
 			<ul>
+				<span>Request Times</span><span>URL</span>
 				{{ range $_,$value := .PopularURL }}
 						<li>
 							{{ range $value }}
@@ -54,19 +81,7 @@ func GenerateHtml()  {
 			</ul>
 		</div>
 
-		<div>
-			<p>Overtime Request</p>
-			<ul>
-				<span>Avg Request Time</span><span>Request Detail</span>
-				{{ range $_,$value := .OvertimeReq }}
-						<li>
-							{{ range $value }}
-								<span>{{.}}</span>
-							{{ end }}
-						</li>
-				{{ end }}
-			</ul>
-		</div>
+
     </body>
 </html>`
 

@@ -1,9 +1,9 @@
 ---
 input_file: temp.log
-start_date: /27\/Sep\/2017/
-#end_date: /24\/Sep\/2017/
+start_date: /28\/Sep\/2017/
+end_date: /29\/Sep\/2017/
 ##an exact day
-end_date:
+#end_date:
 ##read until the end of the file
 #end_date: $
 overtime: 5

@@ -144,15 +144,15 @@ func ListLongest(db *sql.DB) [][2]string {
 }
 
 // 统计异常请求
-func ListError(db *sql.DB) ([][2]string,float64) {
+func ListError(db *sql.DB) ([][2]string,string) {
 	sql := "SELECT * FROM (SELECT status,request FROM log GROUP BY status,request) WHERE status LIKE '4%' OR status LIKE '5%'"
 	rows := RenderTwoColumn(db,sql)
 	sql = "SELECT count(*) AS count FROM log WHERE status LIKE '4%' OR status LIKE '5%'"
-	count,_:= strconv.ParseFloat(RenderString(db,sql),64)
-	total,_ := strconv.ParseFloat(CountRequest(db),64)
+	count,_:= strconv.ParseFloat(RenderString(db,sql),6)
+	total,_ := strconv.ParseFloat(CountRequest(db),6)
 	rate := count / total * 100
-	fmt.Println(rate)
-	return rows,rate
+	s := fmt.Sprintf("%.3f",rate)
+	return rows,s
 }
 
 

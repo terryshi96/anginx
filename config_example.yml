@@ -1,10 +1,9 @@
 ---
-input_file: temp.log
-start_date: /28\/Sep\/2017/
-end_date: /29\/Sep\/2017/
-##an exact day
-#end_date:
-##read until the end of the file
-#end_date: $
+inputfile: temp.log
+startdate: /28\/Sep\/2017/
+enddate: /29\/Sep\/2017/
 overtime: 5
-log_format: '$remote_addr|$remote_port|$request_time|$remote_user|$time_local|$request|$status|$body_bytes_sent|$http_referer|$http_user_agent'
+topip: 10
+toprequest: 10
+logformat: '$remote_addr|$remote_port|$request_time|$remote_user|$time_local|$request|$status|$body_bytes_sent|$http_referer|$http_user_agent'
+truncatedatabase: false

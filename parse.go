@@ -12,11 +12,14 @@ import (
 
 // 配置文件结构体
 type Conf struct {
-	Input_file string      // 需要分析的日志文件路径
-	Start_date string      // 开始日期
-	End_date string        // 结束日期
+	InputFile string      // 需要分析的日志文件路径
+	StartDate string      // 开始日期
+	EndDate string        // 结束日期
 	Overtime string       // 超时时间
-	Log_format string      // 日志格式
+	TopIP string
+	TopRequest string
+	LogFormat string      // 日志格式
+	TruncateDatabase bool // 是否进行建表导入数据操作
 }
 
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
@@ -54,6 +57,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	return nil
 }
 
+// 读入数据
 func FilterTime(start string,end string, file_path string) {
 	// build cmd
 	var command string
@@ -75,6 +79,8 @@ func FilterTime(start string,end string, file_path string) {
 	}
 }
 
+
+// 读取日志格式
 func ParseFormat(format string) []string {
 	// 创建map
 	str := strings.Split(format, "|")

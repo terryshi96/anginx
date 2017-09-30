@@ -6,19 +6,24 @@ import (
 	"log"
 	"fmt"
 	"strconv"
+	"os"
 )
 
 
 func InitDatabase() *sql.DB {
 	// 删除原数据 不对数据做持久化
 	db_path := "/tmp/sqlite.db"
-	//os.Remove(db_path)
+	if t.TruncateDatabase {
+		os.Remove(db_path)
+	}
 	// 新建数据文件
 	db,err := sql.Open("sqlite3",db_path)
 	Check(err)
 	return db
 }
 
+
+// 建表
 func CreateTable(db *sql.DB,ranged_key []string)  {
 	// 根据解析的日志格式创建log表
 	// 构造创建sql
@@ -115,16 +120,16 @@ func CountRequest(db *sql.DB) string {
 	return count
 }
 
-// 统计访问量前200的请求
+// 统计访问量前xx的请求
 func ListPopularURL(db *sql.DB) [][2]string {
-	sql := "SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT 200"
+	sql := "SELECT count(*) AS count,request FROM log GROUP BY request ORDER BY count DESC LIMIT " + t.TopRequest
 	rows := RenderTwoColumn(db,sql)
 	return rows
 }
 
-// 统计访问量前50的IP
+// 统计访问量前xx的IP
 func ListPopularIP(db *sql.DB) [][2]string {
-	sql := "SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT 50"
+	sql := "SELECT count(*) AS count,remote_addr FROM log GROUP BY remote_addr ORDER BY count DESC LIMIT " + t.TopIP
 	rows := RenderTwoColumn(db,sql)
 	return rows
 }

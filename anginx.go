@@ -31,18 +31,17 @@ func main()  {
 	t = Conf{}
 	// 解析yaml文件
 	yaml.Unmarshal(config, &t)
-	fmt.Println("解析文件：",t.Input_file,"输出文件",result_path)
+	fmt.Println("解析文件：",t.InputFile,"输出文件",result_path)
 	// 按日期过滤
-	FilterTime(t.Start_date,t.End_date,t.Input_file)
+	FilterTime(t.StartDate,t.EndDate,t.InputFile)
 
 	// 初始化数据库
 	db := InitDatabase()
-	//// 读取日志格式
-	//ranged_key := ParseFormat(t.Log_format)
-	//// 建表
-	//CreateTable(db,ranged_key)
-	//// 读入数据
-	//ReadLine(tmp_path,db,ranged_key)
+	if t.TruncateDatabase {
+		ranged_key := ParseFormat(t.LogFormat)
+		CreateTable(db, ranged_key)
+		ReadLine(tmp_path, db, ranged_key)
+	}
 	// 断开数据库连接
 	defer db.Close()
 

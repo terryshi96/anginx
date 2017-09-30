@@ -67,7 +67,7 @@ func GenerateHtml()  {
 		</div>
 		<div>
 			<p>Unique IP Number : {{.UniqueIPNumber}}</p>
-			<p>Top 50 IP</p>
+			<p>IP Statistics</p>
 			<ul>
 				<span>Request Times	</span><span>IP</span>
 				{{ range $_,$value := .PopularIP }}
@@ -82,7 +82,7 @@ func GenerateHtml()  {
 
 		<div>
 			<p>Total Request Number : {{.RequestNumber}}<p>
-			<p>Top 200 Requests</p>
+			<p>Requests Statistics</p>
 			<ul>
 				<span>Request Times</span><span>Request Detail</span>
 				{{ range $_,$value := .PopularURL }}

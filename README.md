@@ -4,6 +4,8 @@
 ## Install
 ```
 go get github.com/terryshi96/anginx
+or
+Download binary [a]https://github.com/terryshi96/anginx/releases
 ```
 ## Usage
 ```

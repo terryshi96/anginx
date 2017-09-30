@@ -5,7 +5,7 @@
 ```
 go get github.com/terryshi96/anginx
 ```
-or download binary [a]https://github.com/terryshi96/anginx/releases
+or download binary [release](https://github.com/terryshi96/anginx/releases)
 ## Usage
 ```
 anginx -c config_file_path

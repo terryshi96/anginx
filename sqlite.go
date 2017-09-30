@@ -160,5 +160,9 @@ func ListError(db *sql.DB) ([][2]string,string) {
 	return rows,s
 }
 
-
-
+// 统计时间段访问量
+func CountByTime(db *sql.DB) [][2]string {
+	sql := "SELECT count(*) AS count,time_local FROM log GROUP BY time_local"
+	rows := RenderTwoColumn(db,sql)
+	return rows
+}

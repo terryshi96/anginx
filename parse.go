@@ -22,6 +22,7 @@ type Conf struct {
 	TruncateDatabase bool // 是否进行建表导入数据操作
 }
 
+
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	f, err := os.Open(filePth)
 	if err != nil {
@@ -30,10 +31,14 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	defer f.Close()
 	bfRd := bufio.NewReader(f)
 	var request_index int
+	var time_index int
 	for i,v := range ranged_key {
 		if v == "request" {
 			request_index = i
+		} else if v == "time_local" {
+			time_index = i
 		}
+
 	}
 	for {
 		// 按行读取文件
@@ -48,6 +53,9 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			if strings.Contains(a[request_index],"?") {
 				a[request_index] = strings.Split(a[request_index], "?")[0]
 			}
+			// 截取时间到小时
+			time_local := strings.Split(a[time_index],":")
+			a[time_index] = time_local[0] + "-" + time_local[1]
 			InsertData(db,ranged_key,a)
 
 		} else {

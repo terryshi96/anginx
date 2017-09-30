@@ -15,7 +15,11 @@
 sqlite.db
 tmp
 temp.*
+*.log
+tmp
+Anginx.html
 anginx
+sqlite.db
 
 *.log
 .idea

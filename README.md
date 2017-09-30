@@ -4,9 +4,8 @@
 ## Install
 ```
 go get github.com/terryshi96/anginx
-or
-Download binary [a]https://github.com/terryshi96/anginx/releases
 ```
+or download binary [a]https://github.com/terryshi96/anginx/releases
 ## Usage
 ```
 anginx -c config_file_path

@@ -4,6 +4,7 @@ package main
 import (
 	"html/template"
 	"os"
+	"bytes"
 )
 
 type Data struct{
@@ -15,6 +16,7 @@ type Data struct{
 	LongestReq [][2]string
 	ErrorRate  string
 	ErrorReq   [][2]string
+	Chart      *bytes.Buffer
 }
 
 

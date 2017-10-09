@@ -4,7 +4,6 @@ package main
 import (
 	"html/template"
 	"os"
-	"bytes"
 )
 
 type Data struct{
@@ -16,7 +15,6 @@ type Data struct{
 	LongestReq [][2]string
 	ErrorRate  string
 	ErrorReq   [][2]string
-	Chart      *bytes.Buffer
 }
 
 
@@ -97,7 +95,7 @@ func GenerateHtml()  {
 			</ul>
 		</div>
 		<div>
-		   <img>src="{{ .Chart }}"</img>
+		   <img src="statics.png" alt="img"/>
 		</div>
     </body>
 </html>`

@@ -24,3 +24,4 @@ sqlite.db
 *.log
 .idea
 .idea/*
+*.png

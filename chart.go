@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/wcharczuk/go-chart"
 	"bytes"
-	"fmt"
+	"os"
 )
 
 func InitGraph()  {
@@ -31,6 +31,7 @@ func InitGraph()  {
 
 	buffer := bytes.NewBuffer([]byte{})
 	err := sbc.Render(chart.PNG, buffer)
-	data.Chart = buffer
+	f,err := os.OpenFile("statics.png", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
+	f.Write(buffer.Bytes())
 	Check(err)
 }

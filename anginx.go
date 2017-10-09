@@ -53,7 +53,7 @@ func main()  {
 	data.OvertimeReq = ListAvg(db)
 	data.LongestReq = ListLongest(db)
 	data.ErrorReq,data.ErrorRate = ListError(db)
-	//InitGraph()
+	InitGraph()
 	// 生成html
 	GenerateHtml()
 

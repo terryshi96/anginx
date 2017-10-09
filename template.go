@@ -96,8 +96,9 @@ func GenerateHtml()  {
 				{{ end }}
 			</ul>
 		</div>
-
-
+		<div>
+		   <img>src="{{ .Chart }}"</img>
+		</div>
     </body>
 </html>`
 

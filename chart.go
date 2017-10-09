@@ -32,6 +32,5 @@ func InitGraph()  {
 	buffer := bytes.NewBuffer([]byte{})
 	err := sbc.Render(chart.PNG, buffer)
 	data.Chart = buffer
-	fmt.Println(data.Chart)
 	Check(err)
 }

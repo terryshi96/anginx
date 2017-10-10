@@ -91,7 +91,7 @@ func FilterTime(start string,end string, file_path string) {
 // 读取日志格式
 func ParseFormat(format string) []string {
 	// 创建map
-	str := strings.Split(format, "|")
+	str := strings.Split(format, " |")
 	ranged_key := make([]string,0)
 	for _,value := range str {
 		// 删除prefix

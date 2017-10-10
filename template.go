@@ -15,6 +15,7 @@ type Data struct{
 	LongestReq [][2]string
 	ErrorRate  string
 	ErrorReq   [][2]string
+	TimeNumber [][2]string
 }
 
 

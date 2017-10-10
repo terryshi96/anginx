@@ -12,7 +12,7 @@ import (
 var t Conf
 var data Data
 var tmp_path string = "/tmp/tmp.log"
-var result_path string = "Anginx_9-30.html"
+var result_path string = "Anginx.html"
 
 
 // 抛出异常
@@ -53,7 +53,8 @@ func main()  {
 	data.OvertimeReq = ListAvg(db)
 	data.LongestReq = ListLongest(db)
 	data.ErrorReq,data.ErrorRate = ListError(db)
-	InitGraph()
+	//data.TimeNumber = CountByTime(db)
+	//InitGraph()
 	// 生成html
 	GenerateHtml()
 

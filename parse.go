@@ -48,7 +48,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			// byte转string
 			str := string(line[:])
 			// string split  类似于awk
-			a := strings.Split(str, "|")
+			a := strings.Split(str, " |")
 			// 将请求参数去除
 			if strings.Contains(a[request_index],"?") {
 				a[request_index] = strings.Split(a[request_index], "?")[0]

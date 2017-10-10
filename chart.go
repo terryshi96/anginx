@@ -4,12 +4,23 @@ import (
 	"github.com/wcharczuk/go-chart"
 	"bytes"
 	"os"
+	"strconv"
+	"fmt"
 )
 
 func InitGraph()  {
+	var src []chart.Value
+	var s chart.Value
+	for _,v := range data.TimeNumber {
+		value,_ := strconv.ParseFloat(v[0],6)
+		s.Value = value
+		s.Label = v[1]
+		fmt.Println(s.Label)
+		src = append(src,s)
+	}
 	sbc := chart.BarChart{
 		Height:   512,
-		BarWidth: 60,
+		BarWidth: 200,
 		XAxis: chart.Style{
 			Show: true,
 		},
@@ -18,15 +29,7 @@ func InitGraph()  {
 				Show: true,
 			},
 		},
-		Bars: []chart.Value{
-			{Value: 5.25, Label: "Blue"},
-			{Value: 4.88, Label: "Green"},
-			{Value: 4.74, Label: "Gray"},
-			{Value: 3.22, Label: "Orange"},
-			{Value: 3, Label: "Test"},
-			{Value: 2.27, Label: "??"},
-			{Value: 1, Label: "!!"},
-		},
+		Bars: src,
 	}
 
 	buffer := bytes.NewBuffer([]byte{})

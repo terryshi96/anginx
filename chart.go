@@ -3,9 +3,8 @@ package main
 import (
 	"github.com/wcharczuk/go-chart"
 	"bytes"
-	"os"
 	"strconv"
-	"fmt"
+	"encoding/base64"
 )
 
 func InitGraph()  {
@@ -15,26 +14,30 @@ func InitGraph()  {
 		value,_ := strconv.ParseFloat(v[0],6)
 		s.Value = value
 		s.Label = v[1]
-		fmt.Println(s.Label)
 		src = append(src,s)
 	}
 	sbc := chart.BarChart{
+		//定义图片样式
 		Height:   512,
-		BarWidth: 200,
 		XAxis: chart.Style{
 			Show: true,
+			FontSize: 8,
+			TextRotationDegrees: 75.0,
 		},
 		YAxis: chart.YAxis{
 			Style: chart.Style{
 				Show: true,
 			},
 		},
+		//读取数据
 		Bars: src,
 	}
-
+	//生成图片
 	buffer := bytes.NewBuffer([]byte{})
 	err := sbc.Render(chart.PNG, buffer)
-	f,err := os.OpenFile("statics.png", os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
-	f.Write(buffer.Bytes())
 	Check(err)
+	//直接以base64编码插入html
+	images := base64.StdEncoding.EncodeToString(buffer.Bytes())
+	data.Image = images
+
 }

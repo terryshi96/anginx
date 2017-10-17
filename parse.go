@@ -53,9 +53,10 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			if strings.Contains(a[request_index],"?") {
 				a[request_index] = strings.Split(a[request_index], "?")[0]
 			}
+			a[request_index] = strings.Replace(a[request_index],"HTTP/1.1","", -1)
 			// 截取时间到小时
 			time_local := strings.Split(a[time_index],":")
-			a[time_index] = time_local[0] + "-" + time_local[1]
+			a[time_index] = time_local[0] + "/" + time_local[1]
 			InsertData(db,ranged_key,a)
 
 		} else {
@@ -99,6 +100,16 @@ func ParseFormat(format string) []string {
 		ranged_key = append(ranged_key,a)
 	}
 	return ranged_key
+}
+
+//时间字符串处理
+func FormatTime(start string,end string)  {
+	a := strings.Replace(start,"\\", "" , -1)
+	b := strings.TrimPrefix(a,"/")
+	data.StartDate = strings.TrimSuffix(b,"/")
+	a = strings.Replace(end,"\\", "", -1)
+	b = strings.TrimPrefix(a,"/")
+	data.EndDate = strings.TrimSuffix(a,"/")
 }
 
 //todo

@@ -6,13 +6,16 @@ import (
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
 	"log"
+	"time"
 )
 
 // 变量声明
 var t Conf
 var data Data
+//临时文件
 var tmp_path string = "/tmp/tmp.log"
-var result_path string = "Anginx.html"
+//结果html
+var result_path string = "Anginx_" + time.Now().Format("2006-01-02") + ".html"
 
 
 // 抛出异常
@@ -32,6 +35,8 @@ func main()  {
 	// 解析yaml文件
 	yaml.Unmarshal(config, &t)
 	fmt.Println("解析文件：",t.InputFile,"输出文件",result_path)
+	//时间字符串处理
+	FormatTime(t.StartDate,t.EndDate)
 	// 按日期过滤
 	FilterTime(t.StartDate,t.EndDate,t.InputFile)
 
@@ -53,8 +58,9 @@ func main()  {
 	data.OvertimeReq = ListAvg(db)
 	data.LongestReq = ListLongest(db)
 	data.ErrorReq,data.ErrorRate = ListError(db)
-	//data.TimeNumber = CountByTime(db)
-	//InitGraph()
+	data.TimeNumber = CountByTime(db)
+	//生成图片
+	InitGraph()
 	// 生成html
 	GenerateHtml()
 

@@ -1,9 +1,17 @@
 ---
-inputfile: temp.log
-startdate: /11\/Oct\/2017/
+inputfile: access.log
+startdate: /23\/Oct\/2017/
 enddate:
 overtime: 1
 topip: 10
 toprequest: 10
 logformat: '$remote_addr |$remote_port |$request_time |$remote_user |$time_local |$request |$status |$body_bytes_sent |$http_referer |$http_user_agent'
 truncatedatabase: false
+emailconfig:
+  sending: true
+  username:
+  password:
+  smtphost:
+  sender:
+  receivers:
+    - 'xxx@xxx.com'

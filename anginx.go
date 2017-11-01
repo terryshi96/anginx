@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
@@ -21,20 +20,21 @@ var result_path string = "Anginx_" + time.Now().Format("2006-01-02") + ".html"
 // 抛出异常
 func Check(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err,"\n please check your config")
 	}
 }
 
+
+
 func main()  {
-	config_path := flag.String("c","","please offer config")
-	// 解析命令行参数
-	flag.Parse()
+	config_path := CheckArg()
 	// 读取配置文件
 	config,_:= ioutil.ReadFile(*config_path)
 	t = Conf{}
 	// 解析yaml文件
 	yaml.Unmarshal(config, &t)
-	fmt.Println("解析文件：",t.InputFile,"输出文件",result_path)
+	fmt.Println("File to parse:",t.InputFile,"   ","Result file:",result_path)
+	fmt.Println("Config",t)
 	//时间字符串处理
 	FormatTime(t.StartDate,t.EndDate)
 	// 按日期过滤
@@ -63,5 +63,9 @@ func main()  {
 	InitGraph()
 	// 生成html
 	GenerateHtml()
+	// 发送邮件
+	if t.EmailConfig.Sending {
+		SendingEmail()
+	}
 
 }

@@ -11,8 +11,8 @@ import (
 
 
 func InitDatabase() *sql.DB {
-	// 删除原数据 不对数据做持久化
 	db_path := "/tmp/sqlite.db"
+	//判断是否要重新读入数据
 	if t.TruncateDatabase {
 		os.Remove(db_path)
 	}

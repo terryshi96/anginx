@@ -1,0 +1,18 @@
+---
+inputfile: temp.log
+startdate: /26\/Oct\/2017/
+enddate:
+overtime: 1
+topip: 10
+toprequest: 10
+logformat: '$remote_addr |$remote_port |$request_time |$remote_user |$time_local |$request |$status |$body_bytes_sent |$http_referer |$http_user_agent'
+truncatedatabase: true
+emailconfig:
+  sending: false
+  username: 'monitor@atyun.net'
+  password: 'erfolumulu2tipep'
+  smtphost: 'smtp.exmail.qq.com'
+  sender: 'monitor@atyun.net'
+  receivers:
+    - 'shidakang@atyun.net'
+    - 'tangxu@atyun.net'

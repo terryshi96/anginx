@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"os"
 	"bufio"
+	"flag"
 )
 
 // 配置文件结构体
@@ -20,9 +21,64 @@ type Conf struct {
 	TopRequest string
 	LogFormat string      // 日志格式
 	TruncateDatabase bool // 是否进行建表导入数据操作
+    EmailConfig struct {
+    	Sending bool
+    	UserName string
+    	Password string
+    	SmtpHost string
+    	Sender string
+    	Receivers []string
+	}
+}
+
+//检查配置参数
+func CheckConfig(t Conf) {
+	if len(t.InputFile) == 0 {
+		fmt.Println("Input file can not be empty")
+	} else if len(t.StartDate) == 0 {
+		fmt.Println("Start date can not be empty")
+	} else if len(t.Overtime) == 0 {
+		t.Overtime = "1"
+	} else if len(t.TopIP) == 0 {
+		t.TopIP = "10"
+	} else if len(t.TopRequest) == 0 {
+		t.TopRequest = "10"
+	} else if len(t.LogFormat) == 0 {
+		fmt.Println("Log format can not be empty")
+	}
 }
 
 
+//读取命令行参数
+func CheckArg() *string {
+	usage := `
+	please use a config file including
+	inputfile---log file to parse
+	startdate---use nginx date format
+	enddate---use nginx date format
+	overtime---over this time will be recorded
+	topip---top x ip
+	toprequest---top x requests
+	logformat---nginx log format and split by " |"
+		remote_addr request request_time status time_local must be included
+	truncatedatabase---reload data or not
+	`
+	config_path := flag.String("c","",usage)
+	h := flag.Bool("h", false, "help")
+	// 解析命令行参数
+	flag.Parse()
+	if len(os.Args) == 1 {
+		*h = true
+	}
+	if *h  {
+		flag.Usage()
+		os.Exit(1)
+	}
+	return config_path
+}
+
+
+// 读入数据
 func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	f, err := os.Open(filePth)
 	if err != nil {
@@ -66,7 +122,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	return nil
 }
 
-// 读入数据
+
 func FilterTime(start string,end string, file_path string) {
 	// build cmd
 	var command string
@@ -92,37 +148,44 @@ func FilterTime(start string,end string, file_path string) {
 // 读取日志格式
 func ParseFormat(format string) []string {
 	// 创建map
-	str := strings.Split(format, " |")
-	ranged_key := make([]string,0)
-	for _,value := range str {
-		// 删除prefix
-		a := strings.TrimPrefix(value,"$")
-		ranged_key = append(ranged_key,a)
+	ranged_key := make([]string, 0)
+	if strings.Contains(format," |") && has(format) {
+		str := strings.Split(format, " |")
+		for _, value := range str {
+			// 删除prefix
+			a := strings.TrimPrefix(value, "$")
+			ranged_key = append(ranged_key, a)
+		}
+	} else {
+		fmt.Println("log should be splited by ' |' or has key fields")
+		os.Exit(1)
 	}
+
 	return ranged_key
 }
 
 //时间字符串处理
 func FormatTime(start string,end string)  {
-	a := strings.Replace(start,"\\", "" , -1)
-	b := strings.TrimPrefix(a,"/")
-	data.StartDate = strings.TrimSuffix(b,"/")
-	a = strings.Replace(end,"\\", "", -1)
-	b = strings.TrimPrefix(a,"/")
-	data.EndDate = strings.TrimSuffix(a,"/")
+	if strings.Contains(start,"\\") {
+		a := strings.Replace(start, "\\", "", -1)
+		b := strings.TrimPrefix(a, "/")
+		data.StartDate = strings.TrimSuffix(b, "/")
+		a = strings.Replace(end, "\\", "", -1)
+		b = strings.TrimPrefix(a, "/")
+		data.EndDate = strings.TrimSuffix(a, "/")
+	} else {
+		fmt.Println("date should be like '/11\\/Oct\\/2017/'")
+		os.Exit(1)
+	}
 }
 
-//todo
-func ClearTmpFile()  {
-
+//判断关键字段是否包含
+func has(format string) bool {
+	if strings.Contains(format,"remote_addr") && strings.Contains(format,"request_time") && strings.Contains(format,"request") && strings.Contains(format,"status") && strings.Contains(format,"time_local") {
+		return true
+	}
+	return false
 }
 
-//todo
-func CheckArg()  {
 
-}
 
-//todo
-func CheckConfig()  {
-
-}

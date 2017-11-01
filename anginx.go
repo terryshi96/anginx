@@ -34,7 +34,8 @@ func main()  {
 	// 解析yaml文件
 	yaml.Unmarshal(config, &t)
 	fmt.Println("File to parse:",t.InputFile,"   ","Result file:",result_path)
-	fmt.Println("Config",t)
+	//fmt.Println("Config",t)
+	CheckConfig(t)
 	//时间字符串处理
 	FormatTime(t.StartDate,t.EndDate)
 	// 按日期过滤

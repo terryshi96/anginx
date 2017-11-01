@@ -12,9 +12,16 @@ anginx -c config_file_path
 ```
 
 ## Config file
-```
-log must use '|' to split
-for example '$remote_addr|$remote_port|$request_time|$remote_user|$time_local|$request|$status|$body_bytes_sent|$http_referer|$http_user_agent'
-```
+
+ - inputfile: log file you want to parse
+ - startdate: must be like /23\/Oct\/2017/
+ - enddate:
+ - overtime: request over this time will be recorded(default 1) 
+ - topip: record top x ip addresses(default 10)
+ - toprequest: record top x requests(default 10)
+ - logformat: '$remote_addr |$remote_port |$request_time |$remote_user |$time_local |$request |$status |$body_bytes_sent |$http_referer |$http_user_agent'
+ > log must be splited by ' |' 
+ - truncatedatabase: if you want to load data(default false)
+ - emailconfig: email support config
 
 ## Based on sqlite3

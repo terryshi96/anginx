@@ -50,23 +50,23 @@ func main()  {
 	}
 	// 断开数据库连接
 	defer db.Close()
-
-	// 数据分析
-	data.UniqueIPNumber = CountUniqueIP(db)
-	data.RequestNumber = CountRequest(db)
-	data.PopularURL = ListPopularURL(db)
-	data.PopularIP = ListPopularIP(db)
-	data.OvertimeReq = ListAvg(db)
-	data.LongestReq = ListLongest(db)
-	data.ErrorReq,data.ErrorRate = ListError(db)
-	data.TimeNumber = CountByTime(db)
-	//生成图片
-	InitGraph()
-	// 生成html
-	GenerateHtml()
-	// 发送邮件
-	if t.EmailConfig.Sending {
-		SendingEmail()
-	}
+	OverTimeDetail(db)
+	//// 数据分析
+	//data.UniqueIPNumber = CountUniqueIP(db)
+	//data.RequestNumber = CountRequest(db)
+	//data.PopularURL = ListPopularURL(db)
+	//data.PopularIP = ListPopularIP(db)
+	//data.OvertimeReq = ListAvg(db)
+	//data.LongestReq = ListLongest(db)
+	//data.ErrorReq,data.ErrorRate = ListError(db)
+	//data.TimeNumber = CountByTime(db)
+	////生成图片
+	//InitGraph()
+	//// 生成html
+	//GenerateHtml()
+	//// 发送邮件
+	//if t.EmailConfig.Sending {
+	//	SendingEmail()
+	//}
 
 }

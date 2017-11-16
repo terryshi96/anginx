@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strconv"
 	"os"
+	"encoding/csv"
 )
 
 
@@ -165,4 +166,37 @@ func CountByTime(db *sql.DB) [][2]string {
 	sql := "SELECT count(*) AS count,time_local FROM log GROUP BY time_local"
 	rows := RenderTwoColumn(db,sql)
 	return rows
+}
+
+// 超时请求明细并写入csv
+func OverTimeDetail(db *sql.DB) {
+	sql := "SELECT request_time,request,time_local,remote_addr,http_referer FROM log WHERE request_time > 5"
+	res, err := db.Query(sql)
+	Check(err)
+	defer res.Close()
+	var rows [][5]string
+	for res.Next() {
+		var a [5]string
+		res.Scan(&a[0],&a[1],&a[2],&a[3],&a[4])
+		rows = append(rows,a)
+	}
+	f, err := os.Create("anginx.csv")//创建文件
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	f.WriteString("\xEF\xBB\xBF") // 写入UTF-8 BOM
+	w := csv.NewWriter(f)//创建一个新的写入文件流
+    var data [][]string
+    for i:=0;i<len(rows);i++{
+    	var tmpArr []string
+    	for j:=0;j<5;j++{
+    		tmpArr = append(tmpArr,rows[i][j])
+		}
+		data = append(data,tmpArr)
+	}
+	w.WriteAll(data)//写入数据
+	w.Flush()
+
 }

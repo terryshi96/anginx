@@ -1,6 +1,6 @@
 ---
-inputfile: access.log
-startdate: /23\/Oct\/2017/
+inputfile: temp.log
+startdate: /15\/Nov\/2017/
 enddate:
 overtime: 1
 topip: 10

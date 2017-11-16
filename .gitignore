@@ -27,3 +27,4 @@ sqlite.db
 *.png
 anginx_cron.sh
 test_config.yml
+*.csv

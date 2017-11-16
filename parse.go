@@ -87,12 +87,12 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 	defer f.Close()
 	bfRd := bufio.NewReader(f)
 	var request_index int
-	var time_index int
+	//var time_index int
 	for i,v := range ranged_key {
 		if v == "request" {
 			request_index = i
 		} else if v == "time_local" {
-			time_index = i
+			//time_index = i
 		}
 
 	}
@@ -111,8 +111,8 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			}
 			a[request_index] = strings.Replace(a[request_index],"HTTP/1.1","", -1)
 			// 截取时间到小时
-			time_local := strings.Split(a[time_index],":")
-			a[time_index] = time_local[0] + "/" + time_local[1]
+			//time_local := strings.Split(a[time_index],":")
+			//a[time_index] = time_local[0] + "/" + time_local[1]
 			InsertData(db,ranged_key,a)
 
 		} else {

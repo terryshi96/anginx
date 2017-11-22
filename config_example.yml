@@ -6,12 +6,49 @@ overtime: 1
 topip: 10
 toprequest: 10
 logformat: '$remote_addr |$remote_port |$request_time |$remote_user |$time_local |$request |$status |$body_bytes_sent |$http_referer |$http_user_agent'
-truncatedatabase: false
+truncatedatabase: true
+developermap: {
+              		"closures.json": "朱霄雨",
+              		"show_role_menu.json": "朱霄雨",
+              		"find_agent_settle.json": "朱霄雨",
+              		"agent_new_upload_apply.json": "朱霄雨",
+              		"download_attachments.json": "唐旭",
+              		"export_job_tasks_list.json": "唐旭",
+              		"departments.json": "唐旭",
+              		"start_process.json": "唐旭",
+              		"query_contracts.json": "唐旭",
+              		"get_language_center_by_school.json": "席小雨",
+              		"apply_forms.json": "席小雨",
+              		"get_plans.json": "席小雨",
+              		"agents.json": "席小雨",
+              		"employee_users.json": "席小雨",
+              		"schools_and_courses.json": "席小雨",
+              		"new_upload_apply.json": "席小雨",
+              		"schools.json": "席小雨",
+              		"students.json": "席小雨",
+              		"orders.json": "席小雨",
+              		"plans.json": "席小雨",
+              		"audit_forms.json": "席小雨",
+              		"student_visas.json": "席小雨",
+              		"get_agent_files.json": "席小雨",
+              		"task.json": "席小雨",
+              		"preview_confirmation.json": "席小雨",
+              		"time_records.json": "席小雨",
+              		"new_get_apply_list.json": "席小雨",
+              		"edit_note.json": "席小雨",
+              		"material_list.json": "席小雨",
+              		"undone.json": "席小雨",
+              		"drafts.json": "席小雨",
+              		"add_initiate_supplementary_material_list.json": "席小雨",
+              		"get_trade_no.json": "徐正权",
+              		"get_commission_general.json": "张志亮",
+              }
 emailconfig:
   sending: false
-  username:
-  password:
-  smtphost:
-  sender:
+  username: 'monitor@atyun.net'
+  password: 'erfolumulu2tipep'
+  smtphost: 'smtp.exmail.qq.com'
+  sender: 'monitor@atyun.net'
   receivers:
-    - 'xxx@xxx.com'
+    - 'shidakang@atyun.net'
+    - 'tangxu@atyun.net'

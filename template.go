@@ -12,7 +12,7 @@ type Data struct{
 	PopularURL [][2]string
 	PopularIP  [][2]string
 	OvertimeReq [][2]string
-	LongestReq [][2]string
+	LongestReq [][6]string
 	ErrorRate  string
 	ErrorReq   [][2]string
 	TimeNumber [][2]string
@@ -66,7 +66,10 @@ func GenerateHtml()  {
             width: 800px;
             margin: auto;
         }
-
+        div.panel-longest {
+            width: 1800px;
+            margin: auto;
+        }
         td {
             word-wrap: break-word;
         }
@@ -122,13 +125,17 @@ func GenerateHtml()  {
             </h4>
         </div>
     </div>
-    <div id="collapse2" class="panel-collapse collapse">
-        <div class="panel-body">
+    <div id="collapse2" class="panel-collapse collapse in">
+        <div class="panel-longest">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Longest Request Time(s)</th>
+                    <th>Costs</th>
                     <th>Request Detail</th>
+					<th>Remote Ip</th>
+					<th>Time</th>
+					<th>Referer</th>
+					<th>Developer</th>
                 </tr>
                 </thead>
                 <tbody>

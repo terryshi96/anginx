@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strconv"
 	"os"
+	"strings"
 )
 
 
@@ -142,9 +143,20 @@ func ListAvg(db *sql.DB) [][2]string {
 }
 
 // 统计最长超时请求
-func ListLongest(db *sql.DB) [][2]string {
+func ListLongest(db *sql.DB) [][6]string {
 	sql := "SELECT * FROM (SELECT request_time,request,remote_addr,time_local,http_referer FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
-    rows := RenderTwoColumn(db,sql)
+	res, err := db.Query(sql)
+	Check(err)
+	defer res.Close()
+	var rows [][6]string
+	for res.Next() {
+		var a [6]string
+		res.Scan(&a[0],&a[1],&a[2],&a[3],&a[4])
+		request := strings.Split(a[1], "/")
+		key := len(request)
+		a[5] = t.DeveloperMap[request[key-1]]
+		rows = append(rows,a)
+	}
 	return rows
 }
 

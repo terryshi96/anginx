@@ -21,6 +21,7 @@ type Conf struct {
 	TopRequest string
 	LogFormat string      // 日志格式
 	TruncateDatabase bool // 是否进行建表导入数据操作
+	DeveloperMap map[string]string
     EmailConfig struct {
     	Sending bool
     	UserName string
@@ -109,7 +110,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			if strings.Contains(a[request_index],"?") {
 				a[request_index] = strings.Split(a[request_index], "?")[0]
 			}
-			a[request_index] = strings.Replace(a[request_index],"HTTP/1.1","", -1)
+			a[request_index] = strings.Replace(a[request_index]," HTTP/1.1","", -1)
 			// 截取时间到小时
 			time_local := strings.Split(a[time_index],":")
 			a[time_index] = time_local[0] + "/" + time_local[1]

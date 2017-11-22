@@ -143,7 +143,7 @@ func ListAvg(db *sql.DB) [][2]string {
 
 // 统计最长超时请求
 func ListLongest(db *sql.DB) [][2]string {
-	sql := "SELECT * FROM (SELECT request_time,request FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
+	sql := "SELECT * FROM (SELECT request_time,request,remote_addr,time_local,http_referer FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
     rows := RenderTwoColumn(db,sql)
 	return rows
 }

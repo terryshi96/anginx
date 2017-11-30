@@ -142,15 +142,15 @@ func ListAvg(db *sql.DB) [][2]string {
 }
 
 // 统计最长超时请求
-func ListLongest(db *sql.DB) [][6]string {
-	sql := "SELECT * FROM (SELECT request_time,request,remote_addr,time_local,http_referer FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
+func ListLongest(db *sql.DB) [][7]string {
+	sql := "SELECT * FROM (SELECT request_time,request,parameters,remote_addr,time,http_referer FROM log GROUP BY request ORDER BY max(request_time) DESC) WHERE request_time > " + t.Overtime
 	res, err := db.Query(sql)
 	Check(err)
 	defer res.Close()
-	var rows [][6]string
+	var rows [][7]string
 	for res.Next() {
-		var a [6]string
-		res.Scan(&a[1], &a[2], &a[3], &a[4], &a[5])
+		var a [7]string
+		res.Scan(&a[1], &a[2], &a[3], &a[4], &a[5], &a[6])
 		// 将请求方法截去
 		tmp_request := strings.Split(a[2], " ")
 		request := strings.Split(tmp_request[1], "/")

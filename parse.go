@@ -95,7 +95,6 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 		} else if v == "time_local" {
 			time_index = i
 		}
-
 	}
 	for {
 		// 按行读取文件
@@ -106,14 +105,21 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			str := string(line[:])
 			// string split  类似于awk
 			a := strings.Split(str, " |")
+			// 保存精确时间
+			a = append(a,strings.Split(a[time_index]," ")[0])
+			a = append(a,"")
+			a[request_index] = strings.Replace(a[request_index]," HTTP/1.1","", -1)
 			// 将请求参数去除
 			if strings.Contains(a[request_index],"?") {
-				a[request_index] = strings.Split(a[request_index], "?")[0]
+				tmp_request := strings.Split(a[request_index], "?")
+				a[request_index] = tmp_request[0]
+				// 注意加入参数与字段匹配
+				a[len(a)-1] = tmp_request[1]
 			}
-			a[request_index] = strings.Replace(a[request_index]," HTTP/1.1","", -1)
 			// 截取时间到小时
 			time_local := strings.Split(a[time_index],":")
 			a[time_index] = time_local[0] + "/" + time_local[1]
+			// 插入数据
 			InsertData(db,ranged_key,a)
 
 		} else {
@@ -161,7 +167,8 @@ func ParseFormat(format string) []string {
 		fmt.Println("log should be splited by ' |' or has key fields")
 		os.Exit(1)
 	}
-
+	// 添加精确时间和参数
+	ranged_key = append(ranged_key,"time","parameters")
 	return ranged_key
 }
 

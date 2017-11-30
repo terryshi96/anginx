@@ -130,12 +130,12 @@ func GenerateHtml()  {
             <table class="table">
                 <thead>
                 <tr>
+					<th>Developer</th>
                     <th>Costs</th>
                     <th>Request Detail</th>
 					<th>Remote Ip</th>
 					<th>Time</th>
 					<th>Referer</th>
-					<th>Developer</th>
                 </tr>
                 </thead>
                 <tbody>

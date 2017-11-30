@@ -25,6 +25,5 @@ sqlite.db
 .idea
 .idea/*
 *.png
-anginx_cron.sh
 test_config.yml
 anginx-linux-amd64

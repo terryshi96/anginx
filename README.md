@@ -22,6 +22,7 @@ anginx -c config_file_path
  - logformat: '$remote_addr |$remote_port |$request_time |$remote_user |$time_local |$request |$status |$body_bytes_sent |$http_referer |$http_user_agent'
  > log must be splited by ' |' 
  - truncatedatabase: if you want to load data(default false)
+ - developermap: /api/xxx/yyy map xxx(or yyy) to a developer
  - emailconfig: email support config
 
 ## Based on sqlite3

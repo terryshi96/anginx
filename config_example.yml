@@ -11,11 +11,15 @@ developermap: {
 
               }
 emailconfig:
-  sending: false
-  username:
-  password:
-  smtphost: 'smtp.exmail.qq.com'
-  sender:
+  sending: true
+  username: ''
+  password: ''
+  smtphost: ''
+  sender: ''
+  sendername: ''
+  subject: ''
+  body: ''
   receivers:
-    - 'xxx@xxx.com'
-
+    - ''
+  cc:
+    - ''

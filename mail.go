@@ -9,9 +9,10 @@ import (
 
 func SendingEmail() {
 	// compose the message
-	m := email.NewMessage("留扬宝Nginx日志分析统计" + time.Now().Format("2006-01-02") + "(系统自动发送，无需回复!)", "统计结果见附件")
-	m.From = mail.Address{Name: "【云深监控系统】", Address: t.EmailConfig.Sender}
+	m := email.NewMessage(t.EmailConfig.Subject + time.Now().Format("2006-01-02"), t.EmailConfig.Body)
+	m.From = mail.Address{Name: t.EmailConfig.SenderName, Address: t.EmailConfig.Sender}
 	m.To = t.EmailConfig.Receivers
+	m.Cc = t.EmailConfig.Cc
 
 	// add attachments
 	if err := m.Attach(result_path); err != nil {

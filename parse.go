@@ -28,7 +28,11 @@ type Conf struct {
     	Password string
     	SmtpHost string
     	Sender string
+    	SenderName string
+    	Subject string
+    	Body    string
     	Receivers []string
+		Cc     []string
 	}
 }
 

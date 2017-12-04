@@ -26,4 +26,4 @@ sqlite.db
 .idea/*
 *.png
 test_config.yml
-anginx-linux-amd64
+anginx-*

@@ -10,6 +10,9 @@ truncatedatabase: true
 developermap: {
 
               }
+emailmap: {
+
+}
 emailconfig:
   sending: true
   username: ''

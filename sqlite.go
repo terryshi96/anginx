@@ -148,6 +148,11 @@ func ListLongest(db *sql.DB) [][7]string {
 	Check(err)
 	defer res.Close()
 	var rows [][7]string
+	var emailmap = make(map[string][2]string)
+	// 将配置的邮箱映射赋值
+	for k,v := range t.EmailMap {
+		emailmap[k] = [2]string{v,"0"}
+	}
 	for res.Next() {
 		var a [7]string
 		res.Scan(&a[1], &a[2], &a[3], &a[4], &a[5], &a[6])
@@ -161,7 +166,20 @@ func ListLongest(db *sql.DB) [][7]string {
 		if a[0] == "" && key > 3 {
 			a[0] = t.DeveloperMap[request[2]]
 		}
+		// 判断能否匹配，能匹配则将flag置1
+		tmp_flag := emailmap[a[0]]
+		if (tmp_flag[1] == "0") {
+			tmp_flag[1] = "1"
+			emailmap[a[0]] = tmp_flag
+		}
+
 		rows = append(rows, a)
+	}
+	// 根据flag添加收件人
+	for _,v := range emailmap {
+		if (v[1] == "1") {
+			t.EmailConfig.Receivers = append(t.EmailConfig.Receivers,v[0])
+		}
 	}
 	return rows
 }

@@ -21,7 +21,8 @@ type Conf struct {
 	TopRequest string
 	LogFormat string      // 日志格式
 	TruncateDatabase bool // 是否进行建表导入数据操作
-	DeveloperMap map[string]string
+	DeveloperMap map[string]string //接口映射到开发
+	EmailMap map[string]string //开发邮箱映射
     EmailConfig struct {
     	Sending bool
     	UserName string

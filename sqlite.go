@@ -158,14 +158,18 @@ func ListLongest(db *sql.DB) [][7]string {
 		res.Scan(&a[1], &a[2], &a[3], &a[4], &a[5], &a[6])
 		// 将请求方法截去
 		tmp_request := strings.Split(a[2], " ")
-		request := strings.Split(tmp_request[1], "/")
-		key := len(request)
-		// 匹配接口
-		a[0] = t.DeveloperMap[request[key-1]]
-		// 接口没有匹配到则匹配控制器
-		if a[0] == "" && key > 3 {
-			a[0] = t.DeveloperMap[request[2]]
+		if (len(tmp_request) >= 2) {
+			fmt.Println(tmp_request)
+			request := strings.Split(tmp_request[1], "/")
+			key := len(request)
+			// 匹配接口
+			a[0] = t.DeveloperMap[request[key-1]]
+			// 接口没有匹配到则匹配控制器
+			if a[0] == "" && key > 3 {
+				a[0] = t.DeveloperMap[request[2]]
+			}
 		}
+
 		// 判断能否匹配，能匹配则将flag置1
 		tmp_flag := emailmap[a[0]]
 		if (tmp_flag[1] == "0") {

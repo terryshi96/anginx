@@ -4,6 +4,7 @@ package main
 import (
 	"html/template"
 	"os"
+	"bytes"
 )
 
 type Data struct{
@@ -19,10 +20,12 @@ type Data struct{
 	StartDate string
 	EndDate string
 	Image 	string
+	EmailBody string
 }
 
 
 func GenerateHtml()  {
+	data.EmailBody = t.EmailConfig.Body
 	// 声明模板内容
 	const tpl = `
 <!DOCTYPE html>
@@ -278,15 +281,66 @@ func GenerateHtml()  {
 </body>
 </html>
 `
-
 	// 创建一个新的模板，并且载入内容
 	t, err := template.New("Anginx.html").Parse(tpl)
 	Check(err)
-	// 定义传入到模板的数据，并生成html文件
+	// 定义传入到模板的数据，并生成html附件
 	f, err := os.OpenFile(result_path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0666)
 	Check(err)
 	err = t.Execute(f, data)
 	Check(err)
 	defer f.Close()
+
+	const tpl2 = `<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<title>Anginx</title>
+		<style type="text/css">
+			th {
+				text-align: left;
+			}
+			td {
+				word-wrap: break-word;
+				min-width: 100px;
+				max-width: 450px;
+			}
+		</style>
+	</head>
+	<body>
+		 <span>{{ .EmailBody }}</span>
+		 <table>
+				<caption>耗时请求统计</caption>
+				<thead>
+				<tr>
+					<th>Developer</th>
+					<th>Costs</th>
+					<th>Request</th>
+					<th>Parameters</th>
+					<th>Ip</th>
+					<th>Time</th>
+					<th>Referer</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{ range $_,$value := .LongestReq }}
+				<tr>
+					{{ range $value }}
+					<td>{{.}}</td>
+					{{ end }}
+				</tr>
+				{{ end }}
+				<tbody>
+			</table>
+	</body>
+</html>
+`
+	// 邮件模板
+	t2, err := template.New("Anginx2.html").Parse(tpl2)
+	Check(err)
+	var tmp_body bytes.Buffer
+	err = t2.Execute(&tmp_body, data)
+	Check(err)
+	Body = tmp_body.String()
 
 }

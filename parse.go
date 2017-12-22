@@ -114,6 +114,7 @@ func ReadLine(filePth string,db *sql.DB,ranged_key []string) error {
 			a = append(a,strings.Split(a[time_index]," ")[0])
 			a = append(a,"")
 			a[request_index] = strings.Replace(a[request_index]," HTTP/1.1","", -1)
+			a[request_index] = strings.Replace(a[request_index]," HTTP/2.0","", -1)
 			// 将请求参数去除
 			if strings.Contains(a[request_index],"?") {
 				tmp_request := strings.Split(a[request_index], "?")
